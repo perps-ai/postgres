@@ -189,6 +189,7 @@ function setup_ccache {
 	apt-get install ccache -y
 	mkdir -p /tmp/ccache
 	export PATH=/usr/lib/ccache:$PATH
+	export CCACHE_DIR=/tmp/ccache
 	echo "PATH=$PATH" >> /etc/environment
 }
 

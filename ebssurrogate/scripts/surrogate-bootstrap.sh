@@ -120,8 +120,7 @@ function format_build_partition {
 	mkfs.ext4 -O ^has_journal /dev/xvdc
 }
 function pull_docker {
-	docker run -itd --name ccachedata "${DOCKER_IMAGE}:${DOCKER_IMAGE_TAG}" sh
-	docker exec -itd ccachedata mkdir -p /build/ccache
+	docker create --name ccachedata "${DOCKER_IMAGE}:${DOCKER_IMAGE_TAG}" ls
 }
 
 # Create fstab
@@ -193,7 +192,7 @@ function setup_chroot_environment {
 }
 
 function download_ccache {
-	docker cp ccachedata:/build/ccache/. /mnt/tmp/ccache
+	docker cp ccachedata:/ccache/. /mnt/tmp/ccache
 }
 
 function execute_playbook {
