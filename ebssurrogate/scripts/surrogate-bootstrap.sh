@@ -30,7 +30,7 @@ function waitfor_boot_finished {
 
 function install_packages {
 	# Setup Ansible on host VM
-	apt-get update && sudo apt-get install software-properties-common -y
+	apt-get update && sudo apt-get install software-properties-common ccache -y
 	add-apt-repository --yes --update ppa:ansible/ansible && sudo apt-get install ansible -y
 	ansible-galaxy collection install community.general
 
