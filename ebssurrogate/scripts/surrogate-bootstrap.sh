@@ -196,7 +196,7 @@ function download_ccache {
 }
 
 function execute_playbook {
-
+	ccache -s
 tee /etc/ansible/ansible.cfg <<EOF
 [defaults]
 callbacks_enabled = timer, profile_tasks, profile_roles
