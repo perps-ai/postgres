@@ -193,7 +193,7 @@ function setup_chroot_environment {
 
 function download_ccache {
 	docker cp ccachedata:/ccache/. /mnt/tmp/ccache
-	export CCACHE_DIR=/mnt/tmp/cache
+	export CCACHE_DIR=/mnt/tmp/ccache
 	ccache -s
 }
 
@@ -206,6 +206,7 @@ EOF
 	#export ANSIBLE_LOG_PATH=/tmp/ansible.log && export ANSIBLE_DEBUG=True && export ANSIBLE_REMOTE_TEMP=/mnt/tmp 
 	export ANSIBLE_LOG_PATH=/tmp/ansible.log && export ANSIBLE_REMOTE_TEMP=/mnt/tmp 
 	export CCACHE_DIR=/mnt/tmp/ccache
+	ccache -s
 	ansible-playbook -c chroot -i '/mnt,' /tmp/ansible-playbook/ansible/playbook.yml --extra-vars " $ARGS"
 }
 

@@ -40,6 +40,10 @@
     update-alternatives --set arptables /usr/sbin/arptables-nft
     update-alternatives --set ebtables /usr/sbin/ebtables-nft
     systemctl restart ufw
+    echo "------printenv------"
+    printenv
+    ls -la /tmp
+    ls -la /mnt/tmp
 
 - name: Install other useful tools
   apt:
