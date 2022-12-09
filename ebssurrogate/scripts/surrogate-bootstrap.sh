@@ -205,8 +205,7 @@ EOF
 	# Run Ansible playbook
 	#export ANSIBLE_LOG_PATH=/tmp/ansible.log && export ANSIBLE_DEBUG=True && export ANSIBLE_REMOTE_TEMP=/mnt/tmp 
 	export ANSIBLE_LOG_PATH=/tmp/ansible.log && export ANSIBLE_REMOTE_TEMP=/mnt/tmp 
-	export CCACHE_DIR=/mnt/tmp/ccache
-	ccache -s
+	export CCACHE_DIR=/tmp/ccache
 	ansible-playbook -c chroot -i '/mnt,' /tmp/ansible-playbook/ansible/playbook.yml --extra-vars " $ARGS"
 }
 
