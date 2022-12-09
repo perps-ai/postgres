@@ -294,9 +294,9 @@ install_packages
 device_partition_mappings
 format_and_mount_rootfs
 format_build_partition
-#pull_docker
+pull_docker
 setup_chroot_environment
-#download_ccache
+download_ccache
 execute_playbook
 update_systemd_services
 #upload_ccache

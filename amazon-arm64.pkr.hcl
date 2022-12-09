@@ -60,7 +60,7 @@ variable "docker_passwd" {
 
 variable "docker_image" {
   type    = string
-  default = ""
+  default = "public.ecr.aws/t3w2s2c9/postgres-buildcache"
 }
 
 variable "docker_image_tag" {
