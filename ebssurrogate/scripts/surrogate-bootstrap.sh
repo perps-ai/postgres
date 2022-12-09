@@ -193,6 +193,8 @@ function setup_chroot_environment {
 
 function download_ccache {
 	docker cp ccachedata:/ccache/. /mnt/tmp/ccache
+	export CCACHE_DIR=/tmp/cache
+	ccache -s
 }
 
 function execute_playbook {
