@@ -1,0 +1,114 @@
+# - name: Install pip module
+#   apt:
+#     pkg:
+#       - python3-pip
+#     state: present
+
+# - name: Start docker daemon
+#   ansible.builtin.service:
+#     name: docker
+#     state: started
+
+# - name: Install docker module
+#   ansible.builtin.pip:
+#     name: docker
+#     state: present
+
+# - name: Copy Dockerfile
+#   copy:
+#     src: ./Dockerfile
+#     dest: /tmp/Dockerfile
+#     owner: root
+#     group: root
+#     mode: "0644"
+
+# - name: Build extensions image
+#   docker_image:
+#     name: extensions
+#     source: build
+#     build:
+#       path: /tmp
+#       target: extensions
+#       args: "{{ vars.items() | selectattr('0', 'contains', '_release') | rejectattr('1', 'mapping') | map('join', '=') | join(' ') }}"
+#     state: present
+
+# - name: Create directories
+#   file:
+#     state: directory
+#     owner: root
+#     group: root
+#     mode: "0775"
+#     path: /tmp/extensions/packages
+
+# - name: Export built packages
+#   shell:
+#     cmd: docker save extensions | tar xv
+#     chdir: /tmp/extensions
+
+# - name: Unpack extensions
+#   shell:
+#     cmd: for layer in */layer.tar; do tar xvf "$layer" -C packages --strip-components 1; done
+#     chdir: /tmp/extensions
+
+- name: Copy extension packages
+  synchronize:
+    src: extensions/packages
+    dest: /tmp/extensions/packages
+
+- name: Install extensions
+  apt:
+    deb: /tmp/extensions/packages/*.deb
+
+- name: pg_cron - set cron.database_name
+  become: yes
+  lineinfile:
+    path: /etc/postgresql/postgresql.conf
+    state: present
+    line: cron.database_name = 'postgres'
+
+- name: pgsodium - determine postgres bin directory
+  shell: pg_config --bindir
+  register: pg_bindir_output
+- set_fact:
+    pg_bindir: "{{ pg_bindir_output.stdout }}"
+
+- name: pgsodium - set pgsodium.getkey_script
+  become: yes
+  lineinfile:
+    path: /etc/postgresql/postgresql.conf
+    state: present
+    # script is expected to be placed by finalization tasks for different target platforms
+    line: pgsodium.getkey_script= '{{ pg_bindir }}/pgsodium_getkey.sh'
+
+- name: auto_explain - set auto_explain.log_min_duration
+  become: yes
+  lineinfile:
+    path: /etc/postgresql/postgresql.conf
+    state: present
+    line: auto_explain.log_min_duration = 10s
+
+- name: Cleanup - extension packages
+  file:
+    path: /tmp/extensions
+    state: absent
+
+# - name: Cleanup - Dockerfile
+#   file:
+#     path: /tmp/Dockerfile
+#     state: absent
+
+# - name: Cleanup - uninstall docker
+#   ansible.builtin.pip:
+#     name: docker
+#     state: absent
+
+# - name: Stop docker daemon
+#   ansible.builtin.service:
+#     name: docker
+#     state: stopped
+
+# - name: Cleanup - uninstall pip
+#   apt:
+#     pkg:
+#       - python3-pip
+#     state: absent

@@ -31,7 +31,7 @@
       import_tasks: tasks/setup-postgres.yml
 
     - name: Install Postgres extensions
-      import_tasks: tasks/setup-extensions.yml
+      import_tasks: tasks/setup-docker.yml
 
     - name: Install PgBouncer
       import_tasks: tasks/setup-pgbouncer.yml
